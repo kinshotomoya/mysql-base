@@ -1,0 +1,21 @@
+version: "3"
+services: 
+  db:
+    image: mysql:5.7
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sample_database # 任意の名前
+      MYSQL_USER: kinsho
+      MYSQL_PASSWORD: kinsho
+    volumes:
+    # コンテナ内で作ったDBデータが/var/lib/mysql内に格納されるので、それをローカルの./db/dataに格納する
+    - ./db/data:/var/lib/mysql
+    # コンテナが作られたタイミングでdocker-entrypoint-initdb.d内のファイルが自動で実行されるので、実行したいローカルファイルを
+    # マウントしておく
+    - ./db/sql:/docker-entrypoint-initdb.d
+    # mysqlの設定をマウント
+    - ./db/my.cnf:/etc/mysql/conf.d/my/cnf
+    ports: 
+    - 3314:3306
+
